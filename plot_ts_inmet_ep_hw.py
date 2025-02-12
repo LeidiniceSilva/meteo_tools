@@ -13,7 +13,11 @@ import pandas as pd
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 
+from matplotlib import rcParams
 from scipy.stats import linregress
+
+rcParams['font.family'] = 'Liberation Serif'
+font_size = 12
 
 var = 'Tmax'
 period = '1991_2023'
@@ -98,10 +102,11 @@ fig = plt.figure()
 ax=fig.add_subplot(2, 1, 1)
 plt.bar(hw_df_CO['Year'], hw_df_CO['Heat_Waves'], color='blue', edgecolor='black', linewidth=1)
 plt.plot(hw_df_CO['Year'], intercept_CO + slope_CO * hw_df_CO['Year'], '--r', label=f'Trend line (slope={slope_CO:.2f} p_value < 0.01)')
-plt.title('(a)', loc='left', fontweight='bold')
-plt.ylabel('Number of Heat Waves', fontweight='bold')
+plt.title('(a)', loc='left', fontweight='bold', fontsize=font_size)
+plt.ylabel('Number of Heat Waves', fontweight='bold', fontsize=font_size)
 plt.ylim(0,12)
-plt.xticks(rotation=45)
+plt.yticks(fontsize=font_size)
+plt.xticks(rotation=45, fontsize=font_size)
 plt.grid(True, linestyle='--', alpha=0.8)
 plt.setp(ax.get_xticklabels(), visible=False)
 plt.legend(loc=2)
@@ -110,10 +115,12 @@ plt.legend(loc=2)
 ax=fig.add_subplot(2, 1, 2)
 plt.bar(hw_df_SE['Year'], hw_df_SE['Heat_Waves'], color='blue', edgecolor='black', linewidth=1)
 plt.plot(hw_df_SE['Year'], intercept_SE + slope_SE * hw_df_SE['Year'], '--r', label=f'Trend line (slope={slope_SE:.2f} p_value < 0.01)')
-plt.title('(b)', loc='left', fontweight='bold')
-plt.ylabel('Number of Heat Waves', fontweight='bold')
+plt.title('(b)', loc='left', fontweight='bold', fontsize=font_size)
+plt.ylabel('Number of Heat Waves', fontweight='bold', fontsize=font_size)
+plt.xlabel('Year', fontweight='bold', fontsize=font_size)
 plt.ylim(0,12)
-plt.xticks(rotation=45)
+plt.yticks(fontsize=font_size)
+plt.xticks(rotation=45, fontsize=font_size)
 plt.grid(True, linestyle='--', alpha=0.8)
 plt.legend(loc=2)
 

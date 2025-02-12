@@ -13,6 +13,11 @@ import pandas as pd
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 
+from matplotlib import rcParams
+
+rcParams['font.family'] = 'Liberation Serif'
+font_size = 12
+
 var = 'Tmax'
 period = '1991_2023'
 
@@ -76,23 +81,26 @@ colors_SE = ['red' if value > 0 else 'blue' for value in day_anom_son_2023_SE['A
 # Subplot 1
 ax=fig.add_subplot(2, 1, 1)
 plt.bar(day_anom_son_2023_CO['Date'], day_anom_son_2023_CO['Anomaly'], color=colors_CO, edgecolor='black', linewidth=1)
-plt.title('(a)', loc='left', fontweight='bold')
-plt.ylabel('Tmax anomaly (°C)', fontweight='bold')
+plt.title('(a)', loc='left', fontweight='bold', fontsize=font_size)
+plt.ylabel('Tmax anomaly (°C)', fontweight='bold', fontsize=font_size)
 plt.ylim(-10,10)
 plt.grid(True, linestyle='--', alpha=0.8)
 plt.axhline(0, color='black', linewidth=0.8)
-plt.xticks(rotation=45)
+plt.yticks(fontsize=font_size)
+plt.xticks(rotation=45, fontsize=font_size)
 plt.setp(ax.get_xticklabels(), visible=False)
 
 # Subplot 2
 ax=fig.add_subplot(2, 1, 2)
 plt.bar(day_anom_son_2023_SE['Date'], day_anom_son_2023_SE['Anomaly'], color=colors_SE, edgecolor='black', linewidth=1)
-plt.title('(b)', loc='left', fontweight='bold')
-plt.ylabel('Tmax anomaly (°C)', fontweight='bold')
+plt.title('(b)', loc='left', fontweight='bold', fontsize=font_size)
+plt.xlabel('Period', fontweight='bold', fontsize=font_size)
+plt.ylabel('Tmax anomaly (°C)', fontweight='bold', fontsize=font_size)
 plt.ylim(-10,10)
 plt.grid(True, linestyle='--', alpha=0.8)
+plt.yticks(fontsize=font_size)
 plt.axhline(0, color='black', linewidth=0.8)
-plt.xticks(rotation=45)
+plt.xticks(rotation=45, fontsize=font_size)
 	
 # Path out to save figure
 path_out = '{0}/figs'.format(path)
