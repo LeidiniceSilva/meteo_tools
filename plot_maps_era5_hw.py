@@ -25,7 +25,7 @@ def import_mean(param, hw):
 	lat   = data.variables['latitude'][:]	
 	lon   = data.variables['longitude'][:]
 	mean = var[:][:,:,:]
-	
+
 	return lat, lon, mean
 	
 
@@ -42,13 +42,11 @@ def import_anomaly(param, hw):
 
 
 def basemap(lat, lon):
-	
-	
+
 	map = Basemap(projection='cyl', llcrnrlon=180, llcrnrlat=-70., urcrnrlon=360,urcrnrlat=10, resolution='c')
 	map.drawmeridians(np.arange(180, 360, 30), size=font_size, fontname='Liberation Serif', labels=[0,0,0,1], linewidth=0.5, color='black')
 	map.drawparallels(np.arange(-70, 10, 20), size=font_size, fontname='Liberation Serif', labels=[1,0,0,0], linewidth=0.5, color='black')
 	map.drawcoastlines(linewidth=0.5, color='black')
-	
 	lons, lats = np.meshgrid(lon, lat)
 	xx, yy = map(lons,lats)
 	
