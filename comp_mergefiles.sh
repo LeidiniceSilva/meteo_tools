@@ -22,11 +22,14 @@ CDO(){
   cdo -O -L -f nc4 -z zip $@
 }
 
-YR="1991-2000"
+DIR_IN="/leonardo/home/userexternal/mdasilva"
+cd ${DIR_IN}
+
+YR="1991-1991"
 IYR=$( echo $YR | cut -d- -f1 )
 FYR=$( echo $YR | cut -d- -f2 )
 
-VAR_LIST="avg_sdswrf avg_tdswrf"
+VAR_LIST="avg_tnswrf"
 
 for VAR in ${VAR_LIST[@]}; do
     for YEAR in `seq -w ${IYR} ${FYR}`; do
@@ -35,7 +38,7 @@ for VAR in ${VAR_LIST[@]}; do
 	
     done
     
-    CDO mergetime ${VAR}_ERA5_day_*.nc ${VAR}_ERA5_daymean_${YR}_merged.nc
+    #CDO mergetime ${VAR}_ERA5_day_*.nc ${VAR}_ERA5_daymean_${YR}_merged.nc
     
 done
 
