@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 __author__      = "Leidinice Silva"
 __email__       = "leidinicesilva@gmail.com"
 __date__        = "Dec 04, 2024"
@@ -9,7 +7,7 @@ import matplotlib.pyplot as plt
 
 # Dados fictícios de classificação de Köppen para regiões do Brasil
 regions = [
-    "Amazônia (Af)", 
+    "Norte (Af)", 
     "Nordeste (BSh)", 
     "Centro-Oeste (Aw)", 
     "Sul (Cfa)", 
@@ -39,4 +37,3 @@ plt.grid(True, which='both', linestyle='--', alpha=0.5)
 plt.tight_layout()
 plt.savefig('classificação_climática_Köppen.png', dpi=300)
 plt.show()
-
