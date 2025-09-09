@@ -8,21 +8,26 @@
 #SBATCH --mail-user=mda_silv@ictp.it
 
 mdl="TaiESM1"
+exp="ssp585"
 
 if [ ${mdl} == 'ACCESS-ESM1-5' ]; then # ACCESS-ESM1-5
 	mdl_family="CSIRO"
-	exp="ssp585"
 	member="r1i1p1f1"
 	type="gn"
 	version="v20210318"
 	declare -a YEARS=("20150101-20641231" "20650101-21001231")
 elif [ ${mdl} == 'GFDL-ESM4' ]; then
 	mdl_family="NOAA-GFDL"
-	exp="ssp585"
 	member="r1i1p1f1"
 	type="gr1"
 	version="v20180701"
 	declare -a YEARS=("20150101-20341231" "203650101-20741231" "20750101-20941231" "20950101-21001231")
+elif [ ${mdl} == 'INM-CM5-0' ]; then
+	mdl_family="INM"
+	member="r1i1p1f1"
+	type="gr1"
+	version="v20190619"
+	declare -a YEARS=("20150101-20641231" "20650101-21001231")
 elif [ ${mdl} == 'HadGEM3-GC31-MM' ]; then
 	mdl_family="MOHC"
 	exp="ssp585"
@@ -30,16 +35,26 @@ elif [ ${mdl} == 'HadGEM3-GC31-MM' ]; then
 	type="gn"
 	version="v20200515"
 	declare -a YEARS=("20150101-20191230" "20200101-20241230" "20250101-20291230" "20300101-20341230" "20350101-20391230" "20400101-20441230" "20450101-20491230" "20500101-20541230" "20550101-20591230" "20600101-20641230" "20650101-20691230" "20700101-20741230" "20750101-20791230" "20800101-20841230" "20850101-20891230" "20900101-20941230" "20950101-20991230" "21000101-21001230")
+elif [ ${mdl} == 'MPI-ESM1-2-HR' ]; then
+	mdl_family="DKRZ"
+	member="r1i1p1f1"
+	type="gn"
+	version="v20190710"
+	declare -a YEARS=("20150101-20191231" "20200101-20241231" "20250101-20291231" "20300101-20341231" "20350101-20391231" "20400101-20441231" "20450101-20491231" "20500101-20541231" "20550101-20591231" "20600101-20641231" "20650101-20691231" "20700101-20741231" "20750101-20791231" "20800101-20841231" "20850101-20891231" "20900101-20941231" "20950101-20991231" "21000101-21001231")
 elif [ ${mdl} == 'MPI-ESM1-2-LR' ]; then
 	mdl_family="MPI-M"
-	exp="ssp585"
 	member="r1i1p1f1"
 	type="gn"
 	version="v20190710"
 	declare -a YEARS=("20150101-20341231" "203650101-20741231" "20750101-20941231" "20950101-21001231")
+elif [ ${mdl} == 'MRI-ESM2-0' ]; then
+	mdl_family="MRI" 
+	member="r1i1p1f1"
+	type="gn"
+	version="v20190603" 
+	declare -a YEARS=("20150101-20641231" "20650101-21001231")
 elif [ ${mdl} == 'NorESM2-MM' ]; then
 	mdl_family="NCC" # NorESM2-LM
-	exp="ssp585"
 	member="r1i1p1f1"
 	type="gn"
 	version="v20191108"
