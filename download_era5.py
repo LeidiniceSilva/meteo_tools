@@ -5,7 +5,6 @@ __email__       = "leidinicesilva@gmail.com"
 __date__        = "26/04/2019"
 __description__ = "This script downloads the ERA5  dataset in pressure levels"
 
-
 import os
 import cdsapi
 import calendar

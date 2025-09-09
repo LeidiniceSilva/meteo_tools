@@ -3,7 +3,7 @@
 __author__      = "Leidinice Silva"
 __email__       = "leidinicesilva@gmail.com"
 __date__        = "Mar 04, 2024"
-__description__ = "This script plot bias maps"
+__description__ = "This script compute heat waves events"
 
 import os
 import netCDF4

@@ -3,7 +3,7 @@
 __author__      = "Leidinice Silva"
 __email__       = "leidinicesilva@gmail.com"
 __date__        = "01/15/2020"
-__description__ = "This script compute function to koppen classification"
+__description__ = "This script compute koppen classification"
 
 import numpy as np
 
@@ -191,3 +191,4 @@ def koppen_classification(precip, avgtemp, lat):
                                 else:
                                     climate = 'EF'
     return climate
+

@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 
+__author__      = "Leidinice Silva"
+__email__       = "leidinicesilva@gmail.com"
+__date__        = "20/03/2022"
+__description__ = "This script mask CMIP6 regions"
+
 import sys
 import os
 import numpy as np
