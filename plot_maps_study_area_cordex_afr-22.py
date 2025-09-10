@@ -16,7 +16,7 @@ import matplotlib.patches as mpatches
 from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 
 # Open the file
-file = "orog_AFR-22_ECMWF-ERAINT_evaluation_r1i1p1_ICTP-RegCM4-7_v0_fx.nc"
+file = '/home/mda_silv/clima-archive2-b/ETCCDI_paper/CORDEX/AFR-22/RegCM4/ECMWF-ERAINT/orog_AFR-22_ECMWF-ERAINT_evaluation_r1i1p1_ICTP-RegCM4-7_v0_fx.nc'
 ds = xr.open_dataset(file)
 alt = ds['orog']
 lons = ds['lon']
@@ -81,10 +81,11 @@ ax.text((lon_min + lon_max)/2, (lat_min + lat_mid)/2, 'Coastal Zone',
         ha='center', va='center', transform=ccrs.PlateCarree())
 
 ax.text(-16, -36, u'\u25B2 \nN', color='black', fontweight='bold')
- 
+
 # Path out to save figure
-path_out = '/afs/ictp.it/home/m/mda_silv/Downloads'
-name_out = 'pyplt_maps_study_area_afr.png'
+path_out = '/home/mda_silv/clima-archive2-b/ETCCDI_paper/figs'
+name_out = 'pyplt_maps_study_area_cordex_afr-22.png'
 plt.savefig(os.path.join(path_out, name_out), dpi=400, bbox_inches='tight')
 plt.show()
 exit()
+
