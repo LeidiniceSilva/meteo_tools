@@ -18,6 +18,34 @@ from matplotlib.patches import Rectangle
 from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 
 
+def import_orog_(dirnc, domain):
+
+	number = 5
+	
+	if len(sys.argv) > 1:
+		RCMf = nc(sys.argv[1], mode='r')
+	else:
+		RCMf = nc(os.path.join(dirnc, domain), mode='r')
+	
+	print(RCMf)
+	
+	lat  = RCMf.variables['lat'][:]
+	lon  = RCMf.variables['lon'][:]
+	topo = RCMf.variables['orog'][:]
+	RCMf.close()
+
+	print(topo.shape)
+	
+	ny,nx = topo.shape
+	border_mask = np.full((ny, nx), np.nan)
+	border_mask[:number, :] = 1
+	border_mask[-number:, :] = 1
+	border_mask[:, :number] = 1
+	border_mask[:, -number:] = 1
+
+	return lat, lon, border_mask
+
+
 def import_orog(dirnc, domain):
 
 	number = 9
@@ -25,7 +53,7 @@ def import_orog(dirnc, domain):
 	if len(sys.argv) > 1:
 		RCMf = nc(sys.argv[1], mode='r')
 	else:
-		RCMf = nc(os.path.join(dirnc,'orog_{0}_ECMWF-ERAINT_evaluation_r1i1p1_ICTP-RegCM4-7_v0_fx.nc'.format(domain)), mode='r')
+		RCMf = nc(os.path.join(dirnc, domain), mode='r')
 
 	lat  = RCMf.variables['lat'][:,:]
 	lon  = RCMf.variables['lon'][:,:]
@@ -42,23 +70,31 @@ def import_orog(dirnc, domain):
 	border_mask[:, -number:] = 1
 
 	return lat, lon, border_mask
-
-
+	
+	
 # Import dataset
-lat_i, lon_i, border_mask_i = import_orog('/afs/ictp.it/home/m/mda_silv/Downloads', 'CAM-22')
-lat_ii, lon_ii, border_mask_ii = import_orog('/afs/ictp.it/home/m/mda_silv/Downloads', 'SAM-22')
+domain1 = 'orog_CAM-44_NOAA-GFDL-GFDL-ESM2M_historical_r0i0p0_SMHI-RCA4_v1_fx.nc'
+domain2 = 'orog_CAM-22_ECMWF-ERAINT_evaluation_r1i1p1_ICTP-RegCM4-7_v0_fx.nc'
+domain3 = 'orog_SAM-22_ECMWF-ERAINT_evaluation_r1i1p1_ICTP-RegCM4-7_v0_fx.nc'
+
+path = '/afs/ictp.it/home/m/mda_silv/Downloads'
+
+lat_, lon_, border_mask_ = import_orog_(path, domain1)
+lat_i, lon_i, border_mask_i = import_orog(path, domain2)
+lat_ii, lon_ii, border_mask_ii = import_orog(path, domain3)
 
 # Plot figure
 fig, ax = plt.subplots(subplot_kw={'projection': ccrs.PlateCarree()})
 font_size = 8
 
-ax.contourf(lon_i, lat_i, border_mask_i, cmap='gray', levels=[0, 1])
+ax.contourf(lon_, lat_, border_mask_, cmap='gray', levels=[0, 1])
+#ax.contourf(lon_i, lat_i, border_mask_i, cmap='gray', levels=[0, 1])
 ax.contourf(lon_ii, lat_ii, border_mask_ii, cmap='gray', levels=[0, 1])
 ax.stock_img()
 
 plt.text(130, -85, u'\u25B2 \nN', color='black', fontsize=6, fontweight='bold')
 plt.text(-49, -46, u'SAM', color='gray', fontsize=font_size, fontweight='bold')
-plt.text(-130, -10, u'CAM', color='gray', fontsize=font_size, fontweight='bold')
+plt.text(-115, 4, u'CAM', color='gray', fontsize=font_size, fontweight='bold')
 
 ax.coastlines()
 ax.add_feature(cfeature.BORDERS, linestyle=':', linewidth=0.5)
