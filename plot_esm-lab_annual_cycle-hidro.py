@@ -98,6 +98,7 @@ for i, (region, d) in enumerate(region_data.items()):
     ax.plot(months, d['pet'], 'k', lw=1.5, label='PET')
     ax.plot(months, d['tp'], 'b--', lw=1.5, label='P')
     ax.plot(months, d['e'], 'r--',  lw=1.5, label='E')
+    ax.tick_params(direction='in', which='both', top=True, right=True)
 
     ax.text(0.02, 0.90, identifiers[i],
             transform=ax.transAxes,
@@ -108,7 +109,7 @@ for i, (region, d) in enumerate(region_data.items()):
 
 # Save figure
 plt.tight_layout()
-plt.savefig("annual_cycle_6regions_3vars.png", dpi=400, bbox_inches='tight')
+plt.savefig("annual_cycle_hidro_ESM2025.png", dpi=400, bbox_inches='tight')
 plt.show()
 
-print("Figure saved: annual_cycle_6regions_3vars.png")
+print("Figure saved: annual_cycle_hidro_ESM2025.png")

@@ -112,6 +112,7 @@ for i, (region, d) in enumerate(region_data.items()):
     ax.plot(months, -d['LE'], 'b--', lw=1.5, label='LE')
     ax.plot(months, -d['SH'], 'r--', lw=1.5, label='SH')
     ax.plot(months, d['G'],  color='orange', ls='--', lw=1.5, label='G')
+    ax.tick_params(direction='in', which='both', top=True, right=True)
 
     ax.text(0.02, 0.90, panel_labels[i],
             transform=ax.transAxes, fontsize=10)
