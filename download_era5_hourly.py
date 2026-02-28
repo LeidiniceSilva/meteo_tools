@@ -1,14 +1,26 @@
+# -*- coding: utf-8 -*-
+
+__author__      = "Leidinice Silva"
+__email__       = "leidinicesilvae@gmail.com"
+__date__        = "February 15, 2026"
+__description__ = "ESM lectures"
+
+import os
 import cdsapi
 
 client = cdsapi.Client()
 
 dataset = "reanalysis-era5-single-levels"
 
+var_nc="slhf"
+var_name="surface_upward_latent_heat_flux"
+path="/home/mda_silv/clima-archive2-b/ESM_2025/ERA5"
+
 for year in range(1991, 2021):
 
     request = {
         "product_type": ["reanalysis"],
-        "variable": ["total_precipitation"],
+        "variable": [var_name],
         "year": [str(year)],
         "month": [
             "01", "02", "03", "04", "05", "06",
@@ -30,7 +42,7 @@ for year in range(1991, 2021):
         "download_format": "unarchived"
     }
 
-    output_file = f"tp_ERA5_{year}.nc"
+    output_file = os.path.join(path, f"{var_nc}_ERA5_{year}.nc")
 
     print(f"Downloading {year}...")
     client.retrieve(dataset, request, output_file)
