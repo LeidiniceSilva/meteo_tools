@@ -12,11 +12,11 @@ client = cdsapi.Client()
 
 dataset = "reanalysis-era5-single-levels"
 
-var_nc="slhf"
-var_name="surface_upward_latent_heat_flux"
-path="/home/mda_silv/clima-archive2-b/ESM_2025/ERA5"
+var_nc="sshf"
+var_name="surface_sensible_heat_flux"
+path="/leonardo/home/userexternal/mdasilva/leonardo_scratch/ESM_2025"
 
-for year in range(1991, 2021):
+for year in range(2008, 2009):
 
     request = {
         "product_type": ["reanalysis"],
