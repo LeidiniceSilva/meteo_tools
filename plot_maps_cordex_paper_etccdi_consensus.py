@@ -40,7 +40,7 @@ _, _, txx_sam_cons = read_consensus("TXx_SAM", "TXx_anom_consensus")
 # figure
 fig, axes = plt.subplots(1, 2, figsize=(10, 5), subplot_kw={"projection": ccrs.PlateCarree()})
 
-fig.suptitle("Long Term (2081-2100) RCP8.5 (rel. to 1986-2005) - Annual (21 models)")
+fig.suptitle("Long Term (2081-2100) RCP8.5 (rel. to 1986-2005)")
 
 def add_grid(ax):
     gl = ax.gridlines(draw_labels=True, linewidth=0.75, color="gray", alpha=0.5, linestyle="--")
@@ -53,8 +53,8 @@ def add_grid(ax):
 pcm1 = axes[0].pcolormesh(lon_tc, lat_tc, txx_cam, transform=ccrs.PlateCarree(), cmap="Reds")
 axes[0].pcolormesh(lon_ts, lat_ts, txx_sam, transform=ccrs.PlateCarree(), cmap="Reds")
 
-mask_cc = (txx_cam_cons < 1).astype(int)
-mask_cs = (txx_sam_cons < 1).astype(int)
+mask_cc = (txx_cam_cons < 0.8).astype(int)
+mask_cs = (txx_sam_cons < 0.8).astype(int)
 
 axes[0].contourf(lon_tc, lat_tc, mask_cc, levels=[0.5, 1.5], hatches=['....'], colors='none', transform=ccrs.PlateCarree(), alpha=0)
 axes[0].contourf(lon_ts, lat_ts, mask_cs, levels=[0.5, 1.5], hatches=['....'], colors='none', transform=ccrs.PlateCarree(), alpha=0)
@@ -69,8 +69,8 @@ cbar1.set_label("deg C")
 pcm2 = axes[1].pcolormesh(lon_c, lat_c, cdd_cam, transform=ccrs.PlateCarree(), cmap="BrBG")
 axes[1].pcolormesh(lon_s, lat_s, cdd_sam, transform=ccrs.PlateCarree(), cmap="BrBG")
 
-mask_cc_cdd = (cdd_cam_cons < 1).astype(int)
-mask_cs_cdd = (cdd_sam_cons < 1).astype(int)
+mask_cc_cdd = (cdd_cam_cons < 0.8).astype(int)
+mask_cs_cdd = (cdd_sam_cons < 0.8).astype(int)
 
 axes[1].contourf(lon_c, lat_c, mask_cc_cdd, levels=[0.5, 1.5], hatches=['....'], colors='none', transform=ccrs.PlateCarree(), alpha=0)
 axes[1].contourf(lon_s, lat_s, mask_cs_cdd, levels=[0.5, 1.5], hatches=['....'], colors='none', transform=ccrs.PlateCarree(), alpha=0)
