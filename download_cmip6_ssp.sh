@@ -1,147 +1,48 @@
 #!/bin/bash
 
-model_list=( 'MIROC-ES2L' ) 
+model_list=( 'EC-Earth3-Veg' ) # EC-Earth3-Veg MPI-ESM1-2-HR
 
-#model_list=( 'AWI-CM-1-1-MR' 'CESM2-WACCM' 'EC-Earth3' 'FGOALS-g3' 'GISS-E2-1-G' 'GISS-E2-1-H' 'INM-CM4-8' 'INM-CM5-0' 'IPSL-CM6A-LR' 'MCM-UA-1-0' 'MIROC6' 'MIROC-ES2L' 'MRI-ESM2-0' 'NorESM2-LM' 'NorESM2-MM' ) 
-
-var_list=( 'hus' 'ta' 'tas' 'ts' )     # 'hus' 'ta' 'tas' 'ts'
-exp='ssp245'
+var_list=( 'tas' )   # pr tas tasmax tasmin  
+exp='ssp370'
 
 echo "Starting download"
 for mdl in ${model_list[@]}; do
     for var in ${var_list[@]}; do
 
-        if [ ${mdl} == 'AWI-CM-1-1-MR' ]; then
-	    mdl_family='AWI'
-	    type='gn'
-	    member='r1i1p1f1'
-            version='d20190529'
-            declare -a YEARS=($(seq 2015 2100))
-
-	elif [ ${mdl} == 'CESM2-WACCM' ]; then
-	     mdl_family='NCAR'
-	     type='gn'
-	     member='r1i1p1f1'
-             version='d20190815'
-	     declare -a YEARS=('201501-206412' '206501-210012')
-
-        elif [ ${mdl} == 'EC-Earth3' ]; then
+        if [ ${mdl} == 'EC-Earth3-Veg' ]; then
 	    mdl_family='EC-Earth-Consortium'
 	    type='gr'
 	    member='r1i1p1f1'
-	    version='d20200310'	   
-            declare -a YEARS=($(seq 2015 2100))
+	    version='v20200225'	   
+            declare -a YEARS=($(seq 2015 2024)) 
 
-        elif [ ${mdl} == 'FGOALS-g3' ]; then
-	    mdl_family='CAS'
-	    type='gn'
-	    member='r1i1p1f1'
-	    version=' d20190818'
-            declare -a YEARS=( '201501-201912' '202001-202912' '203001-203912' '204001-204912' '205001-205901' '206001-206901' '207001-207901' '208001-208901' '209001-209912' '210001-210012' )	
-
-        elif [ ${mdl} == 'GISS-E2-1-G' ]; then
-	     mdl_family='NASA-GISS'
-	     type='gn'
-	     member='r1i1p1f2'
-	     version='d20200115'
-	     declare -a YEARS=('201501-205012' '205101-210012')
-
-        elif [ ${mdl} == 'INM-CM4-8' ]; then
-	     mdl_family='INM'
-	     type='gr1'
-	     member='r1i1p1f1'
-	     if [ ${var} == 'hus' ] || [ ${var} == 'ta' ]; then
-             version='d20190605'
-            declare -a YEARS=( '201501-202412' '202501-203412' '203501-204412' '204501-205412' '205501-206401' '206501-207401' '207501-208401' '208501-209401' '209501-210012' )
-	     else
-             version='d20190603'
-	     declare -a YEARS=('201501-210012')
-	     fi
-
-        elif [ ${mdl} == 'INM-CM5-0' ]; then
-	     mdl_family='INM'
-	     type='gr1'
-	     member='r1i1p1f1'
-             version='d20190619'
-	     if [ ${var} == 'hus' ] || [ ${var} == 'ta' ]; then
-            declare -a YEARS=( '201501-202412' '202501-203412' '203501-204412' '204501-205412' '205501-206401' '206501-207401' '207501-208401' '208501-209401' '209501-210012' )
-	     else
-	     declare -a YEARS=('201501-210012')
-	     fi
-
-        elif [ ${mdl} == 'IPSL-CM6A-LR' ]; then
-	     mdl_family='IPSL'
-	     type='gr'
-	     member='r1i1p1f1'
-	     version='d20190119'
-	     declare -a YEARS=('201501-210012')
-
-	elif [ ${mdl} == 'MCM-UA-1-0' ]; then
-	     mdl_family='UA'
+	elif [ ${mdl} == 'MPI-ESM1-2-HR' ]; then
+	     mdl_family='MPI-M'
 	     type='gn'
 	     member='r1i1p1f1'
-             version='d20190731'
-	     declare -a YEARS=('201501-210012')
-
-	elif [ ${mdl} == 'MIROC6' ]; then
-	     mdl_family='MIROC'
-	     type='gn'
-	     member='r1i1p1f1'
-             version='d20190627'
-	     if [ ${var} == 'hus' ] || [ ${var} == 'ta' ]; then
-            declare -a YEARS=( '201501-202412' '202501-203412' '203501-204412' '204501-205412' '205501-206401' '206501-207401' '207501-208401' '208501-209401' '209501-210012' )
-	     else
-	     declare -a YEARS=('201501-210012')
-	     fi
-
-	elif [ ${mdl} == 'MIROC-ES2L' ]; then
-	     mdl_family='MIROC'
-	     type='gn'
-	     member='r1i1p1f2'
-	     version='d20190823'
-	     declare -a YEARS=('201501-210012')
-
-	elif [ ${mdl} == 'MRI-ESM2-0' ]; then
-	     mdl_family='MRI'
-	     type='gn'
-	     member='r1i1p1f1'
-	     if [ ${var} == 'hus' ] || [ ${var} == 'ta' ]; then
-             version='d20190308'
-	     declare -a YEARS=('201501-206412' '206501-210012')
-	     else
-             version='d20190222'
-	     declare -a YEARS=('201501-210012')
-	     fi
-
-	elif [ ${mdl} == 'NorESM2-LM' ]; then
-	     mdl_family='NCC'
-	     type='gn'
-	     member='r1i1p1f1'
-	     version='d20191108'
-            declare -a YEARS=( '201501-202012' '202101-203012' '203101-204012' '204101-205012' '205101-206001' '206101-207001' '207101-208001' '208101-209001' '209101-210012' )
+             version='v20190710'
+             declare -a YEARS=( '18500101-18541231' '18550101-18591231'  '18600101-18641231' '18650101-18691231' '18700101-18741231' '18750101-18791231' '18800101-18841231' '18850101-18891231' '18900101-18941231' '18950101-18991231' '19000101-19041231' '19050101-19091231' '19100101-19141231' '19150101-19191231' '19200101-19241231' '19250101-19291231' '19300101-19341231' '19350101-19391231' '19400101-19441231' '19450101-19491231' '19500101-19541231' '19550101-19591231' '19600101-19641231' '19650101-19691231' '19700101-19741231' '19750101-19791231' '19800101-19841231' '19850101-19891231' '19900101-19941231' '19950101-19991231' '20000101-20041231' '20050101-20091231' '20100101-20141231' )
 
 	else
 	     mdl_family='NCC'
 	     type='gn'
 	     member='r1i1p1f1'
-	     version='d20191108'
-            declare -a YEARS=( '201501-202012' '202101-203012' '203101-204012' '204101-205012' '205101-206001' '206101-207001' '207101-208001' '208101-209001' '209101-210012' )
+	     version='v20191108'
+             declare -a YEARS=( '19700101-19791231' '19800101-19891231' '19900101-19991231' '20000101-20091231' '20100101-20141231' )
 	fi
 	
-	base_url="https://dap.ceda.ac.uk/badc/cmip6/data/CMIP6/ScenarioMIP/${mdl_family}/${mdl}/${exp}/${member}/Amon/${var}/${type}/files/${version}"
-	dir="/leonardo/home/userexternal/mdasilva/leonardo_scratch/CMIP6/ssp245/${mdl}"
+	base_url="https://dap.ceda.ac.uk/badc/cmip6/data/CMIP6/ScenarioMIP/${mdl_family}/${mdl}/${exp}/${member}/3hr/${var}/${type}/${version}"
+	dir="/home/netapp-clima-scratch/mda_silv/CMIP6/${mdl}"
 
 	for year in "${YEARS[@]}"; do
 
-            if [ ${mdl} == 'AWI-CM-1-1-MR' ] || [ ${mdl} == 'EC-Earth3' ]; then
-	    filename="${var}_Amon_${mdl}_${exp}_${member}_${type}_${year}01-${year}12.nc"
+            if [ ${mdl} == 'EC-Earth3-Veg' ]; then
+	    filename="${var}_3hr_${mdl}_${exp}_${member}_${type}_${year}01010130-${year}12312230.nc"
 	    else
-	    filename="${var}_Amon_${mdl}_${exp}_${member}_${type}_${year}.nc"
+	    filename="${var}_day_${mdl}_${exp}_${member}_${type}_${year}.nc"
 	    fi
-
+	    
 	    url="${base_url}/${filename}"
-	    file_dir="/leonardo/home/userexternal/mdasilva/leonardo_scratch/CMIP6/ssp245/${mdl}/${filename}"
-
 	    wget -P "$dir" ${url}
 	    
 	done

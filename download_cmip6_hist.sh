@@ -1,150 +1,48 @@
 #!/bin/bash
 
-model_list=( 'AWI-CM-1-1-MR' 'CESM2-WACCM' 'EC-Earth3' 'FGOALS-g3' 'GISS-E2-1-G' 'GISS-E2-1-H' 'INM-CM4-8' 'INM-CM5-0' 'IPSL-CM6A-LR' 'MCM-UA-1-0' 'MIROC6' 'MIROC-ES2L' 'MRI-ESM2-0' 'NorESM2-LM' 'NorESM2-MM' ) 
+model_list=( 'EC-Earth3-Veg' ) # EC-Earth3-Veg MPI-ESM1-2-HR NorESM2-MM
 
-var_list=( 'hus' 'ta' 'tas' 'ts' )     
+var_list=( 'tas' ) # pr tas tasmax tasmin    
 exp='historical'
 
 echo "Starting download"
 for mdl in ${model_list[@]}; do
     for var in ${var_list[@]}; do
 
-        if [ ${mdl} == 'AWI-CM-1-1-MR' ]; then
-	    mdl_family='AWI'
-	    type='gn'
-	    member='r1i1p1f1'
-            if [ ${var} == 'ta' ] || [ ${var} == 'hus' ]; then
-	        version='d20181218'
-            elif [ ${var} == 'tas' ]; then
-	        version='d20200720'
-            else [ ${var} == 'ts' ]
-	        version='d20200511'
-	    fi 
-            declare -a YEARS=($(seq 1850 2014))
-
-	elif [ ${mdl} == 'CESM2-WACCM' ]; then
-	     mdl_family='NCAR'
-	     type='gn'
-	     member='r1i1p1f1'
-             version='d20190227'
-	     declare -a YEARS=('185001-201412')
-
-        elif [ ${mdl} == 'EC-Earth3' ]; then
+        if [ ${mdl} == 'EC-Earth3-Veg' ]; then
 	    mdl_family='EC-Earth-Consortium'
 	    type='gr'
-	    member='r1i1p1f1'
-	    version='d20200310'	   
-            declare -a YEARS=($(seq 1850 2014)) 
+	    member='r5i1p1f1'
+	    version='v20200312'	   
+            declare -a YEARS=($(seq 1970 2014)) 
 
-        elif [ ${mdl} == 'FGOALS-g3' ]; then
-	    mdl_family='CAS'
-	    type='gn'
-	    member='r1i1p1f1'
-	    version=' d20190818'
-            declare -a YEARS=( '185001-185912' '186001-186912' '187001-187912' '188001-188912' '189001-189912' '190001-190912' '191001-191912' '192001-192912' '193001-193912' '194001-194912' '195001-195912' '196001-196912' '197001-197912' '198001-198912' '199001-199912' '200001-200912' '201001-201412' )	
- 
-        elif [ ${mdl} == 'GISS-E2-1-G' ]; then
-	     mdl_family='NASA-GISS'
+	elif [ ${mdl} == 'MPI-ESM1-2-HR' ]; then
+	     mdl_family='MPI-M'
 	     type='gn'
 	     member='r1i1p1f1'
-	     version='d20180827'
-	     declare -a YEARS=('185001-190012' '190101-195012' '195101-200012' '200101-201412' )
-
-        elif [ ${mdl} == 'GISS-E2-1-H' ]; then
-	     mdl_family='NASA-GISS'
-	     type='gn'
-	     member='r1i1p1f1'
-	     version='d20190403'
-	     declare -a YEARS=('185001-190012' '190101-195012' '195101-200012' '200101-201412' )
-
-        elif [ ${mdl} == 'INM-CM4-8' ]; then
-	     mdl_family='INM'
-	     type='gr1'
-	     member='r1i1p1f1'
-	     if [ ${var} == 'hus' ] || [ ${var} == 'ta' ]; then
-             version='d20190605'
-             declare -a YEARS=( '185001-185912' '186001-186912' '187001-187912' '188001-188912' '189001-189912' '190001-190912' '191001-191912' '192001-192912' '193001-193912' '194001-194912' '195001-195912' '196001-196912' '197001-197912' '198001-198912' '199001-199912' '200001-200912' '201001-201412')
-	     else
-             version='d20190530'
-             declare -a YEARS=( '185001-194912' '195001-199912' '200001-201412')
-             fi
-
-        elif [ ${mdl} == 'INM-CM5-0' ]; then
-	     mdl_family='INM'
-	     type='gr1'
-	     member='r1i1p1f1'
-	     if [ ${var} == 'hus' ] || [ ${var} == 'ta' ]; then
-             version='d20190610'
-             declare -a YEARS=( '185001-185912' '186001-186912' '187001-187912' '188001-188912' '189001-189912' '190001-190912' '191001-191912' '192001-192912' '193001-193912' '194001-194912' '195001-195912' '196001-196912' '197001-197912' '198001-198912' '199001-199912' '200001-200912' '201001-201412')
-	     else
-             version='d20190610'
-             declare -a YEARS=( '185001-194912' '195001-201412')
-	     fi
-
-        elif [ ${mdl} == 'IPSL-CM6A-LR' ]; then
-	     mdl_family='IPSL'
-	     type='gr'
-	     member='r1i1p1f1'
-	     version='d20180803'
-	     declare -a YEARS=('185001-201412')
-
-	elif [ ${mdl} == 'MCM-UA-1-0' ]; then
-	     mdl_family='UA'
-	     type='gn'
-	     member='r1i1p1f1'
-             version='d20190731'
-	     declare -a YEARS=('185001-201412')
-
-	elif [ ${mdl} == 'MIROC6' ]; then
-	     mdl_family='MIROC'
-	     type='gn'
-	     member='r1i1p1f1'
-             version='d20190311'
-             declare -a YEARS=( '185001-185912' '186001-186912' '187001-187912' '188001-188912' '189001-189912' '190001-190912' '191001-191912' '192001-192912' '193001-193912' '194001-194912' '195001-195912' '196001-196912' '197001-197912' '198001-198912' '199001-199912' '200001-200912' '201001-201412' )
-
-	elif [ ${mdl} == 'MIROC-ES2L' ]; then
-	     mdl_family='MIROC'
-	     type='gn'
-	     member='r1i1p1f2'
-	     version='d20190823'
-	     declare -a YEARS=('185001-201412')
-
-	elif [ ${mdl} == 'MRI-ESM2-0' ]; then
-	     mdl_family='MRI'
-	     type='gn'
-	     member='r1i1p1f1'
-             version='d20190308'
-	     declare -a YEARS=('185001-189912' '190001-1949012' '195001-199912' '200001-201412' )
-
-	elif [ ${mdl} == 'NorESM2-LM' ]; then
-	     mdl_family='NCC'
-	     type='gn'
-	     member='r1i1p1f1'
-	     version='d20190815'
-             declare -a YEARS=( '185001-185912' '186001-186912' '187001-187912' '188001-188912' '189001-189912' '190001-190912' '191001-191912' '192001-192912' '193001-193912' '194001-194912' '195001-195912' '196001-196912' '197001-197912' '198001-198912' '199001-199912' '200001-200912' '201001-201412' )
-
+             version='v20190710'
+             declare -a YEARS=( '18500101-18541231' '18550101-18591231'  '18600101-18641231' '18650101-18691231' '18700101-18741231' '18750101-18791231' '18800101-18841231' '18850101-18891231' '18900101-18941231' '18950101-18991231' '19000101-19041231' '19050101-19091231' '19100101-19141231' '19150101-19191231' '19200101-19241231' '19250101-19291231' '19300101-19341231' '19350101-19391231' '19400101-19441231' '19450101-19491231' '19500101-19541231' '19550101-19591231' '19600101-19641231' '19650101-19691231' '19700101-19741231' '19750101-19791231' '19800101-19841231' '19850101-19891231' '19900101-19941231' '19950101-19991231' '20000101-20041231' '20050101-20091231' '20100101-20141231' )
+  
 	else
 	     mdl_family='NCC'
 	     type='gn'
 	     member='r1i1p1f1'
-	     version='d20191108'
-             declare -a YEARS=( '185001-185912' '186001-186912' '187001-187912' '188001-188912' '189001-189912' '190001-190912' '191001-191912' '192001-192912' '193001-193912' '194001-194912' '195001-195912' '196001-196912' '197001-197912' '198001-198912' '199001-199912' '200001-200912' '201001-201412' )
+	     version='v20191108'
+             declare -a YEARS=( '19700101-19791231' '19800101-19891231' '19900101-19991231' '20000101-20091231' '20100101-20141231' )
 	fi
 	
-	base_url="https://dap.ceda.ac.uk/badc/cmip6/data/CMIP6/CMIP/${mdl_family}/${mdl}/${exp}/${member}/Amon/${var}/${type}/files/${version}"
-	dir="/leonardo/home/userexternal/mdasilva/leonardo_scratch/CMIP6/historical/${mdl}"
+	base_url="https://dap.ceda.ac.uk/badc/cmip6/data/CMIP6/CMIP/${mdl_family}/${mdl}/${exp}/${member}/3hr/${var}/${type}/${version}"
+	dir="/home/mda_silv/scratch/CORDEX-CORE2/CMIP6/${mdl}/${var}"
 
 	for year in "${YEARS[@]}"; do
 
-            if [ ${mdl} == 'AWI-CM-1-1-MR' ] || [ ${mdl} == 'EC-Earth3' ]; then
-	    filename="${var}_Amon_${mdl}_${exp}_${member}_${type}_${year}01-${year}12.nc"
+            if [ ${mdl} == 'EC-Earth3-Veg' ]; then
+	    filename="${var}_3hr_${mdl}_${exp}_${member}_${type}_${year}01010000-${year}12312100.nc"
 	    else
-	    filename="${var}_Amon_${mdl}_${exp}_${member}_${type}_${year}.nc"
+	    filename="${var}_day_${mdl}_${exp}_${member}_${type}_${year}.nc"
 	    fi
-
+	    
 	    url="${base_url}/${filename}"
-	    file_dir="/leonardo/home/userexternal/mdasilva/leonardo_scratch/CMIP6/historical/${mdl}/${filename}"
-
 	    wget -P "$dir" ${url}
 	    
 	done
