@@ -1,0 +1,168 @@
+# -*- coding: utf-8 -*-
+
+__author__      = "Leidinice Silva"
+__email__       = "leidinicesilva@gmail.com"
+__date__        = "November 13, 2026"
+__description__ = "This script plot annual cycle"
+
+import os
+import numpy as np
+import xarray as xr
+import geopandas as gpd
+import matplotlib.pyplot as plt
+import cartopy.crs as ccrs
+import cartopy.feature as cfeature
+
+from matplotlib.transforms import IdentityTransform
+from cartopy.mpl.ticker import LatitudeFormatter, LongitudeFormatter
+
+# PATHS
+data_dir = ("/home/mda_silv/clima-archive2-b/ETCCDI/OBS/CPC/precip_ts")
+
+shapefile_path = ("/home/clima-archive4-b/nzazulie/trendsCORDEX/IPCC-WGI-land-reference-regions-v5.shp")
+
+path_out = ("/home/mda_silv/clima-archive2-b/ETCCDI/figs")
+os.makedirs(path_out, exist_ok=True)
+
+# REGIONS
+region_codes = ["ESAF", "MDG", "NCAF", "NCSH", "NEAF", "NESH", "NWSH", "SCAF", "SCSH", "SEAF", "SESH", "SMED", "SWSH", "WAF", "WSAF"]
+
+# READ SHAPEFILE
+gdf = gpd.read_file(shapefile_path)
+
+if gdf.crs is not None:
+    gdf = gdf.to_crs(epsg=4326)
+
+africa = gdf[
+    (gdf["CONTINENT"] == "AFRICA") &
+    (gdf["ACRONYM"].isin(region_codes))
+].copy()
+
+# READ PRECIPITATION TIME SERIES
+def read_precip(region):
+
+    filename = os.path.join(data_dir, f"precip_{region}_ts.nc")
+
+    if not os.path.exists(filename):
+        print(f"Missing file: {filename}")
+        return None
+
+    with xr.open_dataset(filename) as ds:
+        print(region, ds)
+
+        # Select precipitation variable
+        var = next(v for v in ds.data_vars if v.lower() not in ["time_bnds", "time_bounds"])
+        da = ds[var]
+
+        # Identify time dimension
+        time_dim = next(d for d in da.dims if "time" in d.lower())
+
+        # Spatial average if necessary
+        spatial_dims = [d for d in da.dims if d != time_dim]
+
+        if spatial_dims:
+            da = da.mean(dim=spatial_dims, skipna=True)
+
+        # Annual cycle (monthly climatology)
+        monthly = da.groupby(f"{time_dim}.month").mean(time_dim, skipna=True)
+
+        return monthly.values
+
+
+precip = {}
+
+for code in region_codes:
+    values = read_precip(code)
+    if values is not None and len(values) == 12:
+        precip[code] = values
+
+
+# CREATE FIGURE
+fig = plt.figure(figsize=(16, 12))
+ax = plt.axes(projection=ccrs.PlateCarree())
+
+lon1, lon2 = -25, 60
+lat1, lat2 = -40, 40
+
+ax.set_extent([lon1, lon2, lat1, lat2], crs=ccrs.PlateCarree())
+
+# Background
+ax.add_feature(cfeature.OCEAN, facecolor="white", zorder=0)
+ax.add_feature(cfeature.LAND, facecolor="0.95", zorder=0)
+ax.add_feature(cfeature.COASTLINE, linewidth=0.7, zorder=1)
+ax.add_feature(cfeature.BORDERS, linestyle=":", linewidth=0.5)
+
+# PLOT REGIONAL SHAPEFILE
+ax.add_geometries(africa.geometry, crs=ccrs.PlateCarree(), facecolor="none", edgecolor="black", linewidth=1.0, zorder=2)
+ax.set_xticks(np.arange(lon1, lon2 + 1, 10), crs=ccrs.PlateCarree())
+ax.set_yticks(np.arange(lat1, lat2 + 1, 10), crs=ccrs.PlateCarree())
+ax.xaxis.set_major_formatter(LongitudeFormatter())
+ax.yaxis.set_major_formatter(LatitudeFormatter())
+ax.grid(color="gray", linestyle="--", alpha=0.4)
+
+# INSERT ANNUAL CYCLE AT EACH REGIONAL CENTROID
+months = np.arange(1, 13)
+
+month_labels = ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"]
+
+for _, row in africa.iterrows():
+
+    code = row["ACRONYM"]
+
+    if code not in precip:
+        continue
+
+    # Actual centroid of the polygon
+    centroid = row.geometry.centroid
+
+    lon = centroid.x
+    lat = centroid.y
+
+    values = precip[code]
+
+    # Geographic position -> display coordinates
+    xy_display = ax.transData.transform((lon, lat))
+
+    # Graph size in pixels
+    width_px = 105
+    height_px = 75
+
+    # Center graph on centroid
+    left = xy_display[0] - width_px / 2
+    bottom = xy_display[1] - height_px / 2
+
+    # Create inset using display coordinates
+    inset = fig.add_axes(
+        [
+            left / fig.bbox.width,
+            bottom / fig.bbox.height,
+            width_px / fig.bbox.width,
+            height_px / fig.bbox.height
+        ],
+        zorder=5
+    )
+
+    # Annual precipitation cycle
+    inset.plot(months, values, color="darkblue", linewidth=1.5, marker="o", markersize=2.5)
+    inset.fill_between(months, values, color="steelblue", alpha=0.15)
+
+    inset.set_xlim(1, 12)
+    inset.set_xticks([1, 4, 7, 10])
+    inset.set_xticklabels(["J", "A", "J", "O"], fontsize=6)
+    inset.tick_params(axis="y", labelsize=6, pad=1, length=2)
+    inset.tick_params(axis="x", labelsize=6, pad=1, length=2)
+    inset.set_title(code, fontsize=8, fontweight="bold", pad=2)
+    inset.grid(linestyle=":", linewidth=0.4, alpha=0.5)
+    inset.set_facecolor("white")
+
+    for spine in inset.spines.values():
+        spine.set_linewidth(0.7)
+        spine.set_edgecolor("black")
+
+# TITLE
+ax.set_title("(a)", fontsize=10, fontweight="bold")
+
+# SAVE FIGURE
+plt.savefig(os.path.join(path_out, "pyplt_maps_annual_cycles_cordex_afr-12_ipcc_regions.png"), dpi=400, bbox_inches="tight")
+plt.show()
+

@@ -60,7 +60,7 @@ ax.text(-16, -36, u"\u25B2 \nN", color="black", fontweight="bold")
 
 # Path out to save figure
 path_out = "/home/mda_silv/clima-archive2-b/ETCCDI/figs"
-name_out = "pyplt_maps_study_area_cordex_afr-22_ipcc_regions.png"
+name_out = "pyplt_maps_study_area_cordex_afr_ipcc_regions.png"
 plt.savefig(os.path.join(path_out, name_out), dpi=400, bbox_inches="tight")
 plt.show()
 exit()
